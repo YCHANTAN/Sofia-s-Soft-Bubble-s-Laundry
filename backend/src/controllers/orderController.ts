@@ -76,3 +76,32 @@ export const updateOrderStatus = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: 'Error updating order status', error: error.message });
   }
 };
+
+export const getMyOrders = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+
+  try {
+    // 1. Find the customer_id associated with this user_id
+    const customerResult = await pool.query('SELECT id FROM customers WHERE user_id = $1', [userId]);
+    
+    if (customerResult.rows.length === 0) {
+      return res.status(404).json({ message: 'Customer profile not found' });
+    }
+    
+    const customerId = customerResult.rows[0].id;
+
+    // 2. Fetch all orders for this customer
+    const result = await pool.query(
+      `SELECT o.*, c.full_name, c.phone_number 
+       FROM orders o 
+       JOIN customers c ON o.customer_id = c.id 
+       WHERE o.customer_id = $1 
+       ORDER BY o.created_at DESC`,
+      [customerId]
+    );
+    
+    res.json(result.rows);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Error fetching your orders', error: error.message });
+  }
+};
