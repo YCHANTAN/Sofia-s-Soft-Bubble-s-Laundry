@@ -1,0 +1,195 @@
+import { useState, useEffect } from 'react';
+import api from '../services/api';
+import { Search, UserPlus, User as UserIcon, ShieldCheck } from 'lucide-react';
+import { User } from '../types';
+
+const Staff = () => {
+  const [staffList, setStaffList] = useState<User[]>([]);
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [newStaff, setNewStaff] = useState({ 
+    username: '', 
+    password: '',
+    confirmPassword: ''
+  });
+  const [error, setError] = useState('');
+
+  const fetchStaff = async () => {
+    try {
+      // In a real app, you'd have an endpoint to list users by role
+      const response = await api.get<User[]>(`/auth/users?role=staff&search=${search}`);
+      setStaffList(response.data);
+    } catch (err) {
+      console.error('Error fetching staff:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // For now, let's just mock the list since we don't have the GET /users endpoint yet
+    // I will add the endpoint in the next step
+    setLoading(false);
+  }, []);
+
+  const handleCreateStaff = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (newStaff.password !== newStaff.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    try {
+      await api.post('/auth/register-staff', {
+        username: newStaff.username,
+        password: newStaff.password
+      });
+      setShowModal(false);
+      setNewStaff({ username: '', password: '', confirmPassword: '' });
+      // fetchStaff();
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Error creating staff account');
+      console.error('Error creating staff:', err);
+    }
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Staff Management</h1>
+          <p className="text-gray-500">Add and manage laundry shop staff</p>
+        </div>
+        <button 
+          onClick={() => setShowModal(true)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-700 transition-colors"
+        >
+          <UserPlus className="w-5 h-5 mr-2" />
+          Add Staff Member
+        </button>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+        <div className="p-4 border-b border-gray-100 flex items-center">
+          <Search className="w-5 h-5 text-gray-400 mr-2" />
+          <input 
+            type="text" 
+            placeholder="Search staff by username..." 
+            className="flex-1 focus:outline-none"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-gray-50 text-gray-600 text-sm uppercase">
+                <th className="px-6 py-3 font-medium">Username</th>
+                <th className="px-6 py-3 font-medium">Role</th>
+                <th className="px-6 py-3 font-medium text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {loading ? (
+                <tr><td colSpan={3} className="px-6 py-10 text-center text-gray-500">Loading staff...</td></tr>
+              ) : staffList.length === 0 ? (
+                <tr><td colSpan={3} className="px-6 py-10 text-center text-gray-500">No staff members found</td></tr>
+              ) : (
+                staffList.map((staff) => (
+                  <tr key={staff.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center mr-3 font-bold">
+                          {staff.username.charAt(0).toUpperCase()}
+                        </div>
+                        <span className="font-medium text-gray-800">{staff.username}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold uppercase">
+                        {staff.role}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button className="text-red-600 hover:text-red-800 text-sm font-medium">Deactivate</button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-xl shadow-xl w-[400px]">
+            <h2 className="text-xl font-bold mb-6 flex items-center">
+              <ShieldCheck className="w-6 h-6 mr-2 text-blue-600" />
+              Add Staff Member
+            </h2>
+            {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm">{error}</div>}
+            <form onSubmit={handleCreateStaff}>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                <div className="relative">
+                  <UserIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="e.g. staff_marie"
+                    value={newStaff.username}
+                    onChange={(e) => setNewStaff({ ...newStaff, username: e.target.value })}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                <input
+                  type="password"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={newStaff.password}
+                  onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+                <input
+                  type="password"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={newStaff.confirmPassword}
+                  onChange={(e) => setNewStaff({ ...newStaff, confirmPassword: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="flex-1 bg-gray-100 text-gray-700 font-bold py-2 rounded-lg hover:bg-gray-200"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700"
+                >
+                  Create Account
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Staff;
