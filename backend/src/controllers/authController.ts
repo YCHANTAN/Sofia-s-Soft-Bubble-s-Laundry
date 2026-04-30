@@ -25,13 +25,13 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const registerStaff = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
+  const { username, password, full_name, phone_number } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      'INSERT INTO users (username, password_hash, role) VALUES ($1, $2, $3) RETURNING id, username, role',
-      [username, hashedPassword, 'staff']
+      'INSERT INTO users (username, password_hash, role, full_name, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, role, full_name, phone_number',
+      [username, hashedPassword, 'staff', full_name, phone_number]
     );
 
     res.status(201).json(result.rows[0]);
@@ -62,7 +62,13 @@ export const login = async (req: Request, res: Response) => {
 
     res.json({
       token,
-      user: { id: user.id, username: user.username, role: user.role },
+      user: { 
+        id: user.id, 
+        username: user.username, 
+        role: user.role,
+        full_name: user.full_name,
+        phone_number: user.phone_number
+      },
     });
   } catch (error: any) {
     console.error('LOGIN ERROR:', error);
@@ -88,7 +94,7 @@ export const getUsers = async (req: Request, res: Response) => {
   const { role, search } = req.query;
 
   try {
-    let query = 'SELECT id, username, role FROM users WHERE 1=1';
+    let query = 'SELECT id, username, role, full_name, phone_number FROM users WHERE 1=1';
     let params: any[] = [];
 
     if (role) {
@@ -98,7 +104,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
     if (search) {
       params.push(`%${search}%`);
-      query += ` AND username ILIKE $${params.length}`;
+      query += ` AND (username ILIKE $${params.length} OR full_name ILIKE $${params.length})`;
     }
 
     const result = await pool.query(query, params);

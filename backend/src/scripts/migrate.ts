@@ -12,8 +12,14 @@ async function migrate() {
       ALTER TABLE customers 
       ADD COLUMN IF NOT EXISTS user_id INT UNIQUE REFERENCES users(id)
     `);
+
+    // 2. Add full_name and phone_number to users
+    await pool.query(`
+      ALTER TABLE users 
+      ADD COLUMN IF NOT EXISTS full_name VARCHAR(100),
+      ADD COLUMN IF NOT EXISTS phone_number VARCHAR(20)
+    `);
     
-    // 2. Update roles comment/check (optional in SQL but good for documentation)
     console.log('Migration completed successfully!');
   } catch (error) {
     console.error('Migration failed:', error);

@@ -3,6 +3,7 @@ import {
   createOrder,
   getOrders,
   updateOrderStatus,
+  getMyOrders,
 } from '../controllers/orderController';
 import { authenticateToken } from '../middleware/auth';
 
@@ -12,6 +13,7 @@ router.use(authenticateToken);
 
 router.post('/', createOrder);
 router.get('/', getOrders);
+router.get('/my-orders', getMyOrders);
 router.patch('/:id/status', updateOrderStatus);
 
 export default router;
