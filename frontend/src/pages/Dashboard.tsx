@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { ShoppingBag, CheckCircle, Clock, Wind, RotateCcw, Plus, Search, LucideIcon } from 'lucide-react';
+import { ShoppingBag, CheckCircle, Clock, Wind, RotateCcw, Plus, Search, LucideIcon, TrendingUp, Users } from 'lucide-react';
+import { Order, Customer } from '../types';
 
 interface StatusColumn {
   id: Order['status'];
@@ -46,6 +47,11 @@ const OrderCard = ({ order, onUpdateStatus }: { order: Order; onUpdateStatus: (i
 const Dashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<DashboardStats>({
+    activeOrders: 0,
+    todayRevenue: 0,
+    newCustomersToday: 0
+  });
   const [showModal, setShowModal] = useState(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [customerSearch, setCustomerSearch] = useState('');
@@ -53,7 +59,7 @@ const Dashboard = () => {
   const [newOrder, setNewOrder] = useState({
     weight_kg: '',
     service_type: 'Wash & Dry',
-    total_amount: ''
+    total_amount: '0'
   });
 
   const fetchOrders = async () => {
@@ -64,6 +70,15 @@ const Dashboard = () => {
       console.error('Error fetching orders:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const response = await api.get<DashboardStats>('/reports/dashboard-stats');
+      setStats(response.data);
+    } catch (err) {
+      console.error('Error fetching stats:', err);
     }
   };
 
@@ -79,6 +94,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchOrders();
+    fetchStats();
+    // Set up auto-refresh every 30 seconds
+    const interval = setInterval(() => {
+      fetchOrders();
+      fetchStats();
+    }, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -88,9 +110,28 @@ const Dashboard = () => {
     return () => clearTimeout(delayDebounce);
   }, [customerSearch]);
 
+  // Auto-calculate amount when weight changes
+  useEffect(() => {
+    const weight = parseFloat(newOrder.weight_kg);
+    if (!isNaN(weight)) {
+      setNewOrder(prev => ({
+        ...prev,
+        total_amount: (weight * 33).toFixed(2)
+      }));
+    } else {
+      setNewOrder(prev => ({
+        ...prev,
+        total_amount: '0'
+      }));
+    }
+  }, [newOrder.weight_kg]);
+
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedCustomer) return alert('Please select a customer');
+    if (!selectedCustomer) {
+      alert('Error: Please select an existing customer. Orders can only be created for registered customers.');
+      return;
+    }
     try {
       await api.post('/orders', {
         ...newOrder,
@@ -100,7 +141,7 @@ const Dashboard = () => {
       });
       setShowModal(false);
       setSelectedCustomer(null);
-      setNewOrder({ weight_kg: '', service_type: 'Wash & Dry', total_amount: '' });
+      setNewOrder({ weight_kg: '', service_type: 'Wash & Dry', total_amount: '0' });
       fetchOrders();
     } catch (err) {
       console.error('Error creating order:', err);
@@ -129,18 +170,42 @@ const Dashboard = () => {
         </div>
         <div className="flex gap-4">
           <button 
-            onClick={fetchOrders}
-            className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            Refresh Board
-          </button>
-          <button 
             onClick={() => setShowModal(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-700 transition-colors"
           >
             <Plus className="w-5 h-5 mr-2" />
             New Order
           </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
+          <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mr-4">
+            <TrendingUp className="w-6 h-6 text-blue-600" />
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Today's Revenue</p>
+            <h3 className="text-2xl font-bold text-gray-800">₱{stats.todayRevenue.toLocaleString()}</h3>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
+          <div className="w-12 h-12 bg-orange-50 rounded-lg flex items-center justify-center mr-4">
+            <ShoppingBag className="w-6 h-6 text-orange-600" />
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Active Orders</p>
+            <h3 className="text-2xl font-bold text-gray-800">{stats.activeOrders}</h3>
+          </div>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
+          <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mr-4">
+            <Users className="w-6 h-6 text-green-600" />
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 font-medium">New Customers Today</p>
+            <h3 className="text-2xl font-bold text-gray-800">{stats.newCustomersToday}</h3>
+          </div>
         </div>
       </div>
 
@@ -236,28 +301,21 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <label className="block text-gray-700 text-sm font-bold mb-2">Service Type</label>
-                  <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={newOrder.service_type}
-                    onChange={(e) => setNewOrder({ ...newOrder, service_type: e.target.value })}
-                  >
-                    <option>Wash & Dry</option>
-                    <option>Dry Only</option>
-                    <option>Wash Only</option>
-                    <option>Comforter/Heavy</option>
-                  </select>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none text-gray-500 font-medium"
+                    value="Wash & Dry"
+                    readOnly
+                  />
                 </div>
               </div>
 
               <div className="mb-6">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Total Amount (₱)</label>
-                <input
-                  type="number"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold text-blue-600"
-                  value={newOrder.total_amount}
-                  onChange={(e) => setNewOrder({ ...newOrder, total_amount: e.target.value })}
-                  required
-                />
+                <div className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-blue-50 font-bold text-blue-700 text-lg">
+                  ₱{newOrder.total_amount}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Rate: ₱33.00 per kilo</p>
               </div>
 
               <div className="flex gap-4">

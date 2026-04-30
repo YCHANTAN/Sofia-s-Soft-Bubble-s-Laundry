@@ -2,12 +2,15 @@ export interface User {
   id: number;
   username: string;
   role: 'admin' | 'staff' | 'customer';
+  full_name?: string;
+  phone_number?: string;
 }
 
 export interface Customer {
   id: number;
   full_name: string;
   phone_number: string;
+  username?: string;
   created_at: string;
 }
 
