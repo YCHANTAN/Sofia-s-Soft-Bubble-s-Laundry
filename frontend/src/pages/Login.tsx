@@ -12,8 +12,12 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(username, password);
-      navigate('/');
+      const user = await login(username, password);
+      if (user.role === 'customer') {
+        navigate('/my-orders');
+      } else {
+        navigate('/');
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed');
     }

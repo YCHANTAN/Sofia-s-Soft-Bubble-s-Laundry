@@ -7,6 +7,7 @@ import {
   ShoppingBag, 
   LogOut, 
   TrendingUp,
+  History,
   LucideIcon
 } from 'lucide-react';
 
@@ -29,7 +30,8 @@ const Sidebar = () => {
 
   const navItems: NavItem[] = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard, roles: ['admin', 'staff'] },
-    { name: 'My Orders', path: '/my-orders', icon: ShoppingBag, roles: ['customer'] },
+    { name: 'My Laundry Orders', path: '/my-orders', icon: ShoppingBag, roles: ['customer'] },
+    { name: 'View History', path: '/my-history', icon: History, roles: ['customer'] },
     { name: 'Customers', path: '/customers', icon: Users, roles: ['admin', 'staff'] },
     { name: 'Orders', path: '/orders', icon: ShoppingBag, roles: ['admin', 'staff'] },
     { name: 'Staff Management', path: '/staff', icon: Users, roles: ['admin'] },

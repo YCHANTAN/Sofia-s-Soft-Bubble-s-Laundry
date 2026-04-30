@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
-import { Search, UserPlus, User as UserIcon, ShieldCheck, Trash2 } from 'lucide-react';
+import { Search, UserPlus, User as UserIcon, ShieldCheck, Trash2, MoreVertical } from 'lucide-react';
 import { User } from '../types';
 
 const Staff = () => {
@@ -8,10 +8,14 @@ const Staff = () => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [newStaff, setNewStaff] = useState({ 
     username: '', 
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    full_name: '',
+    phone_number: ''
   });
   const [error, setError] = useState('');
 
@@ -34,6 +38,17 @@ const Staff = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [search]);
 
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpenDropdownId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleCreateStaff = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -46,10 +61,12 @@ const Staff = () => {
     try {
       await api.post('/auth/register-staff', {
         username: newStaff.username,
-        password: newStaff.password
+        password: newStaff.password,
+        full_name: newStaff.full_name,
+        phone_number: newStaff.phone_number
       });
       setShowModal(false);
-      setNewStaff({ username: '', password: '', confirmPassword: '' });
+      setNewStaff({ username: '', password: '', confirmPassword: '', full_name: '', phone_number: '' });
       fetchStaff();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Error creating staff account');
@@ -58,6 +75,7 @@ const Staff = () => {
   };
 
   const handleDeleteStaff = async (id: number) => {
+    setOpenDropdownId(null);
     if (!window.confirm('Are you sure you want to remove this staff member? This will delete their login account.')) return;
     
     try {
@@ -90,19 +108,19 @@ const Staff = () => {
           <Search className="w-5 h-5 text-gray-400 mr-2" />
           <input 
             type="text" 
-            placeholder="Search staff by username..." 
+            placeholder="Search staff by username or name..." 
             className="flex-1 focus:outline-none"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto min-h-[200px]">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-gray-50 text-gray-600 text-sm uppercase">
+                <th className="px-6 py-3 font-medium">Staff Member</th>
                 <th className="px-6 py-3 font-medium">Username</th>
-                <th className="px-6 py-3 font-medium">Role</th>
                 <th className="px-6 py-3 font-medium text-right">Actions</th>
               </tr>
             </thead>
@@ -116,25 +134,40 @@ const Staff = () => {
                   <tr key={staff.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
-                        <div className="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center mr-3 font-bold">
-                          {staff.username.charAt(0).toUpperCase()}
+                        <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mr-3 font-bold text-lg">
+                          {staff.full_name?.charAt(0).toUpperCase() || staff.username.charAt(0).toUpperCase()}
                         </div>
-                        <span className="font-medium text-gray-800">{staff.username}</span>
+                        <div>
+                          <p className="font-bold text-gray-800">{staff.full_name || 'No Name Set'}</p>
+                          <p className="text-xs text-gray-500">{staff.phone_number || 'No Phone'}</p>
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold uppercase">
-                        {staff.role}
-                      </span>
+                      <span className="text-sm text-gray-600">@{staff.username}</span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right relative">
                       <button 
-                        onClick={() => handleDeleteStaff(staff.id)}
-                        className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center justify-end"
+                        onClick={() => setOpenDropdownId(openDropdownId === staff.id ? null : staff.id)}
+                        className="p-1 hover:bg-gray-200 rounded-full transition-colors text-gray-400 hover:text-gray-600"
                       >
-                        <Trash2 className="w-4 h-4 mr-1" />
-                        Remove
+                        <MoreVertical className="w-5 h-5" />
                       </button>
+
+                      {openDropdownId === staff.id && (
+                        <div 
+                          ref={dropdownRef}
+                          className="absolute right-6 top-10 w-40 z-40 bg-white/70 backdrop-blur-md border border-white/20 shadow-xl rounded-lg py-1 overflow-hidden animate-in fade-in zoom-in duration-200"
+                        >
+                          <button 
+                            onClick={() => handleDeleteStaff(staff.id)}
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-600/10 flex items-center transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Remove
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -146,7 +179,7 @@ const Staff = () => {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-xl shadow-xl w-[400px]">
+          <div className="bg-white p-8 rounded-xl shadow-xl w-[450px] max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-6 flex items-center">
               <ShieldCheck className="w-6 h-6 mr-2 text-blue-600" />
               Add Staff Member
@@ -154,6 +187,28 @@ const Staff = () => {
             {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm">{error}</div>}
             <form onSubmit={handleCreateStaff}>
               <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g. Marie Dela Cruz"
+                  value={newStaff.full_name}
+                  onChange={(e) => setNewStaff({ ...newStaff, full_name: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="e.g. 09123456789"
+                  value={newStaff.phone_number}
+                  onChange={(e) => setNewStaff({ ...newStaff, phone_number: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="mb-4 border-t pt-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
                 <div className="relative">
                   <UserIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
