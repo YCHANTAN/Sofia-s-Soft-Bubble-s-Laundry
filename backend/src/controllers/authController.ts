@@ -69,3 +69,41 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error logging in', error: error.message });
   }
 };
+
+export const deleteStaff = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query('DELETE FROM users WHERE id = $1 AND role = $2 RETURNING *', [id, 'staff']);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Staff member not found' });
+    }
+    res.json({ message: 'Staff member deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: 'Error deleting staff member', error: error.message });
+  }
+};
+
+export const getUsers = async (req: Request, res: Response) => {
+  const { role, search } = req.query;
+
+  try {
+    let query = 'SELECT id, username, role FROM users WHERE 1=1';
+    let params: any[] = [];
+
+    if (role) {
+      params.push(role);
+      query += ` AND role = $${params.length}`;
+    }
+
+    if (search) {
+      params.push(`%${search}%`);
+      query += ` AND username ILIKE $${params.length}`;
+    }
+
+    const result = await pool.query(query, params);
+    res.json(result.rows);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Error fetching users', error: error.message });
+  }
+};

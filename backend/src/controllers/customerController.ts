@@ -99,3 +99,50 @@ export const updateCustomer = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: 'Error updating customer', error: error.message });
   }
 };
+
+export const deleteCustomer = async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  const client = await pool.connect();
+
+  try {
+    await client.query('BEGIN');
+    
+    // Get customer to find user_id
+    const customerResult = await client.query('SELECT user_id, full_name FROM customers WHERE id = $1', [id]);
+    if (customerResult.rows.length === 0) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+    const { user_id, full_name } = customerResult.rows[0];
+
+    // Delete orders first (cascade or manual)
+    await client.query('DELETE FROM orders WHERE customer_id = $1', [id]);
+    
+    // Delete customer
+    await client.query('DELETE FROM customers WHERE id = $1', [id]);
+    
+    // Delete user account if it exists
+    if (user_id) {
+      await client.query('DELETE FROM users WHERE id = $1', [user_id]);
+    }
+
+    await client.query('COMMIT');
+    await logAction(req.user?.id, 'DELETE_CUSTOMER', 'customer', parseInt(id), `Deleted customer ${full_name}`);
+    
+    res.json({ message: 'Customer and associated accounts/orders deleted successfully' });
+  } catch (error: any) {
+    await client.query('ROLLBACK');
+    res.status(500).json({ message: 'Error deleting customer', error: error.message });
+  } finally {
+    client.release();
+  }
+};
+
+export const getCustomerOrders = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('SELECT * FROM orders WHERE customer_id = $1 ORDER BY created_at DESC', [id]);
+    res.json(result.rows);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Error fetching customer orders', error: error.message });
+  }
+};

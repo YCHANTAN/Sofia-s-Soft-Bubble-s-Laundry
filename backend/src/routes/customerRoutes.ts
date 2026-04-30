@@ -4,6 +4,8 @@ import {
   getCustomers,
   getCustomerById,
   updateCustomer,
+  deleteCustomer,
+  getCustomerOrders,
 } from '../controllers/customerController';
 import { authenticateToken } from '../middleware/auth';
 
@@ -16,5 +18,7 @@ router.post('/', createCustomer);
 router.get('/', getCustomers);
 router.get('/:id', getCustomerById);
 router.put('/:id', updateCustomer);
+router.delete('/:id', deleteCustomer);
+router.get('/:id/orders', getCustomerOrders);
 
 export default router;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Search, UserPlus, User as UserIcon, ShieldCheck } from 'lucide-react';
+import { Search, UserPlus, User as UserIcon, ShieldCheck, Trash2 } from 'lucide-react';
 import { User } from '../types';
 
 const Staff = () => {
@@ -17,7 +17,6 @@ const Staff = () => {
 
   const fetchStaff = async () => {
     try {
-      // In a real app, you'd have an endpoint to list users by role
       const response = await api.get<User[]>(`/auth/users?role=staff&search=${search}`);
       setStaffList(response.data);
     } catch (err) {
@@ -28,10 +27,12 @@ const Staff = () => {
   };
 
   useEffect(() => {
-    // For now, let's just mock the list since we don't have the GET /users endpoint yet
-    // I will add the endpoint in the next step
-    setLoading(false);
-  }, []);
+    const delayDebounceFn = setTimeout(() => {
+      fetchStaff();
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
 
   const handleCreateStaff = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,10 +50,22 @@ const Staff = () => {
       });
       setShowModal(false);
       setNewStaff({ username: '', password: '', confirmPassword: '' });
-      // fetchStaff();
+      fetchStaff();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Error creating staff account');
       console.error('Error creating staff:', err);
+    }
+  };
+
+  const handleDeleteStaff = async (id: number) => {
+    if (!window.confirm('Are you sure you want to remove this staff member? This will delete their login account.')) return;
+    
+    try {
+      await api.delete(`/auth/staff/${id}`);
+      fetchStaff();
+    } catch (err) {
+      console.error('Error deleting staff:', err);
+      alert('Failed to remove staff member');
     }
   };
 
@@ -115,7 +128,13 @@ const Staff = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-red-600 hover:text-red-800 text-sm font-medium">Deactivate</button>
+                      <button 
+                        onClick={() => handleDeleteStaff(staff.id)}
+                        className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center justify-end"
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Remove
+                      </button>
                     </td>
                   </tr>
                 ))

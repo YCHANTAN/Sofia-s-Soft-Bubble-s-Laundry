@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Search, UserPlus, Phone, User as UserIcon } from 'lucide-react';
-import { Customer } from '../types';
+import { Search, UserPlus, Phone, User as UserIcon, Trash2, History, X } from 'lucide-react';
+import { Customer, Order } from '../types';
 
 const Customers = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const [newCustomer, setNewCustomer] = useState({ 
     full_name: '', 
     phone_number: '',
@@ -59,6 +63,32 @@ const Customers = () => {
     } catch (err: any) {
       setError(err.response?.data?.message || 'Error creating customer');
       console.error('Error creating customer:', err);
+    }
+  };
+
+  const handleDeleteCustomer = async (id: number) => {
+    if (!window.confirm('Are you sure you want to delete this customer? All associated orders and their login account will be removed.')) return;
+    
+    try {
+      await api.delete(`/customers/${id}`);
+      fetchCustomers();
+    } catch (err) {
+      console.error('Error deleting customer:', err);
+      alert('Failed to delete customer');
+    }
+  };
+
+  const handleViewHistory = async (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setShowHistoryModal(true);
+    setLoadingHistory(true);
+    try {
+      const response = await api.get<Order[]>(`/customers/${customer.id}/orders`);
+      setCustomerOrders(response.data);
+    } catch (err) {
+      console.error('Error fetching customer history:', err);
+    } finally {
+      setLoadingHistory(false);
     }
   };
 
@@ -120,8 +150,21 @@ const Customers = () => {
                     <td className="px-6 py-4 text-gray-500">
                       {new Date(customer.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">View History</button>
+                    <td className="px-6 py-4 text-right flex justify-end gap-3">
+                      <button 
+                        onClick={() => handleViewHistory(customer)}
+                        className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center"
+                      >
+                        <History className="w-4 h-4 mr-1" />
+                        View History
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteCustomer(customer.id)}
+                        className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
+                      >
+                        <Trash2 className="w-4 h-4 mr-1" />
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -130,6 +173,58 @@ const Customers = () => {
           </table>
         </div>
       </div>
+
+      {showHistoryModal && selectedCustomer && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-xl shadow-xl w-[700px] max-h-[80vh] flex flex-col">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold">Order History: {selectedCustomer.full_name}</h2>
+              <button onClick={() => setShowHistoryModal(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="overflow-y-auto flex-1">
+              {loadingHistory ? (
+                <p className="text-center py-10 text-gray-500">Loading history...</p>
+              ) : customerOrders.length === 0 ? (
+                <p className="text-center py-10 text-gray-500">No orders found for this customer.</p>
+              ) : (
+                <table className="w-full text-left">
+                  <thead className="bg-gray-50 sticky top-0">
+                    <tr className="text-gray-600 text-xs uppercase">
+                      <th className="px-4 py-2 font-medium">Date</th>
+                      <th className="px-4 py-2 font-medium">Service</th>
+                      <th className="px-4 py-2 font-medium">Weight</th>
+                      <th className="px-4 py-2 font-medium">Status</th>
+                      <th className="px-4 py-2 font-medium text-right">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {customerOrders.map((order) => (
+                      <tr key={order.id} className="text-sm">
+                        <td className="px-4 py-3 text-gray-500">{new Date(order.created_at).toLocaleDateString()}</td>
+                        <td className="px-4 py-3 font-medium text-gray-800">{order.service_type}</td>
+                        <td className="px-4 py-3 text-gray-600">{order.weight_kg}kg</td>
+                        <td className="px-4 py-3">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                            order.status === 'Ready' ? 'bg-green-100 text-green-700' : 
+                            order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' : 
+                            'bg-blue-100 text-blue-700'
+                          }`}>
+                            {order.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right font-bold text-blue-600">₱{order.total_amount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
