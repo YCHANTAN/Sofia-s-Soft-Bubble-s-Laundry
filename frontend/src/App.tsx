@@ -8,9 +8,8 @@ import Customers from './pages/Customers';
 import Analytics from './pages/Analytics';
 import Staff from './pages/Staff';
 import CustomerDashboard from './pages/CustomerDashboard';
-
-// Placeholder components
-const Orders = () => <h1 className="text-2xl font-bold">Order List</h1>;
+import CustomerHistory from './pages/CustomerHistory';
+import Orders from './pages/Orders';
 
 const PrivateRoute = ({ children }: { children: ReactNode }) => {
   const { user, loading } = useAuth();
@@ -21,18 +20,27 @@ const PrivateRoute = ({ children }: { children: ReactNode }) => {
   return <MainLayout>{children}</MainLayout>;
 };
 
+const HomeRedirect = () => {
+  const { user } = useAuth();
+  if (user?.role === 'customer') {
+    return <Navigate to="/my-orders" />;
+  }
+  return <Dashboard />;
+};
+
 const App = () => {
   return (
     <AuthProvider>
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/" element={<PrivateRoute><HomeRedirect /></PrivateRoute>} />
           <Route path="/customers" element={<PrivateRoute><Customers /></PrivateRoute>} />
           <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
           <Route path="/analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
           <Route path="/staff" element={<PrivateRoute><Staff /></PrivateRoute>} />
           <Route path="/my-orders" element={<PrivateRoute><CustomerDashboard /></PrivateRoute>} />
+          <Route path="/my-history" element={<PrivateRoute><CustomerHistory /></PrivateRoute>} />
         </Routes>
       </Router>
     </AuthProvider>
