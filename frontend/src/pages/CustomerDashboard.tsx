@@ -10,9 +10,10 @@ const CustomerDashboard = () => {
   useEffect(() => {
     const fetchMyOrders = async () => {
       try {
-        // In a real app, this would be a filtered endpoint for the current user
         const response = await api.get<Order[]>('/orders/my-orders');
-        setOrders(response.data);
+        // Filter for only active orders (not completed)
+        const activeOrders = response.data.filter(o => o.status !== 'Completed');
+        setOrders(activeOrders);
       } catch (err) {
         console.error('Error fetching my orders:', err);
       } finally {
@@ -22,6 +23,19 @@ const CustomerDashboard = () => {
 
     fetchMyOrders();
   }, []);
+
+  const handleCompleteOrder = async (orderId: number) => {
+    if (!window.confirm('Are you sure you have picked up your laundry? This will mark the order as Completed.')) return;
+    
+    try {
+      await api.patch(`/orders/${orderId}/status`, { status: 'Completed' });
+      // Update local state to remove the completed order from active view
+      setOrders(orders.filter(o => o.id !== orderId));
+    } catch (err) {
+      console.error('Error completing order:', err);
+      alert('Failed to update order status. Please try again or contact staff.');
+    }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -62,6 +76,14 @@ const CustomerDashboard = () => {
               </div>
               
               <div className="flex items-center gap-8">
+                {order.status === 'Ready' && (
+                  <button 
+                    onClick={() => handleCompleteOrder(order.id)}
+                    className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition-colors shadow-sm"
+                  >
+                    Mark as Picked Up
+                  </button>
+                )}
                 <div className="text-right">
                   <p className="text-sm text-gray-500 mb-1">Status</p>
                   <div className="flex items-center font-bold">
