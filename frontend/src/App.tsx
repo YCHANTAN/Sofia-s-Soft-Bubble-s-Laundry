@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { Toaster } from 'react-hot-toast';
 import MainLayout from './components/layout/MainLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -31,6 +32,20 @@ const HomeRedirect = () => {
 const App = () => {
   return (
     <AuthProvider>
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#fff',
+            color: '#363636',
+            borderRadius: '1rem',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+            padding: '16px',
+            fontWeight: '600'
+          },
+        }}
+      />
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
