@@ -7,9 +7,9 @@ export default {
     extend: {
       colors: {
         brand: {
-          DEFAULT: '#8B4C6A',
-          light: '#F8F2F5',
-          dark: '#7A3D5B',
+          DEFAULT: '#00B5B8',
+          light: '#F0FAFA',
+          dark: '#009699',
         }
       },
       keyframes: {

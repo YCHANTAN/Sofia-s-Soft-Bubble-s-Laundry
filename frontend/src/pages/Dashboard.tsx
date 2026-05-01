@@ -15,28 +15,28 @@ const STATUS_COLUMNS: StatusColumn[] = [
   { id: 'Washing', label: 'Washing', icon: RotateCcw, color: 'bg-blue-50' },
   { id: 'Drying', label: 'Drying', icon: Wind, color: 'bg-orange-50' },
   { id: 'Ready', label: 'Ready', icon: ShoppingBag, color: 'bg-emerald-50' },
-  { id: 'Completed', label: 'Completed', icon: CheckCircle, color: 'bg-[#8B4C6A]/5' },
+  { id: 'Completed', label: 'Completed', icon: CheckCircle, color: 'bg-[#00B5B8]/5' },
 ];
 
 const OrderCard = ({ order, onUpdateStatus }: { order: Order; onUpdateStatus: (id: number, status: Order['status']) => void }) => {
   return (
-    <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm border border-[#8B4C6A]/5 mb-4 hover:shadow-md hover:border-[#8B4C6A]/20 transition-all duration-300 group">
+    <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm border border-[#00B5B8]/5 mb-4 hover:shadow-md hover:border-[#00B5B8]/20 transition-all duration-300 group">
       <div className="flex justify-between items-start mb-3">
         <div>
-          <p className="text-[10px] font-black text-[#8B4C6A]/40 uppercase tracking-widest mb-1">#{order.id}</p>
-          <h3 className="font-black text-gray-800 group-hover:text-[#8B4C6A] transition-colors leading-tight">{order.full_name}</h3>
+          <p className="text-[10px] font-black text-[#00B5B8]/40 uppercase tracking-widest mb-1">#{order.id}</p>
+          <h3 className="font-black text-gray-800 group-hover:text-[#00B5B8] transition-colors leading-tight">{order.full_name}</h3>
         </div>
-        <span className="text-[10px] font-black bg-[#8B4C6A]/10 text-[#8B4C6A] px-2 py-1 rounded-lg uppercase">
+        <span className="text-[10px] font-black bg-[#00B5B8]/10 text-[#00B5B8] px-2 py-1 rounded-lg uppercase">
           {order.weight_kg}kg
         </span>
       </div>
       <p className="text-xs text-gray-500 font-bold mb-4 uppercase tracking-tighter">{order.service_type}</p>
       <div className="flex justify-between items-center pt-3 border-t border-gray-50">
-        <span className="text-sm font-black text-[#8B4C6A]">₱{order.total_amount}</span>
+        <span className="text-sm font-black text-[#00B5B8]">₱{order.total_amount}</span>
         <select 
           value={order.status}
           onChange={(e) => onUpdateStatus(order.id, e.target.value as Order['status'])}
-          className="text-[10px] font-black uppercase tracking-wider bg-gray-50 border-none rounded-xl px-2 py-1.5 focus:ring-2 focus:ring-[#8B4C6A]/20 cursor-pointer transition-all"
+          className="text-[10px] font-black uppercase tracking-wider bg-gray-50 border-none rounded-xl px-2 py-1.5 focus:ring-2 focus:ring-[#00B5B8]/20 cursor-pointer transition-all"
         >
           {STATUS_COLUMNS.map(col => (
             <option key={col.id} value={col.id}>{col.label}</option>
@@ -174,7 +174,7 @@ const Dashboard = () => {
         <div className="flex gap-4">
           <button 
             onClick={() => setShowModal(true)}
-            className="bg-[#8B4C6A]/10 hover:bg-[#8B4C6A]/20 text-[#8B4C6A] px-6 py-3 rounded-2xl flex items-center transition-all duration-200 border border-[#8B4C6A]/20 font-bold shadow-sm"
+            className="bg-[#00B5B8]/10 hover:bg-[#00B5B8]/20 text-[#00B5B8] px-6 py-3 rounded-2xl flex items-center transition-all duration-200 border border-[#00B5B8]/20 font-bold shadow-sm"
           >
             <Plus className="w-5 h-5 mr-2" />
             New Order
@@ -217,14 +217,14 @@ const Dashboard = () => {
           <div key={column.id} className="flex-shrink-0 w-80">
             <div className={`flex items-center p-4 rounded-t-[2rem] ${column.color} border-b-2 border-white/50`}>
               <div className="p-2 bg-white/50 rounded-xl mr-3">
-                <column.icon className="w-4 h-4 text-[#8B4C6A]" />
+                <column.icon className="w-4 h-4 text-[#00B5B8]" />
               </div>
-              <h2 className="font-black text-[#8B4C6A] uppercase tracking-widest text-[10px]">{column.label}</h2>
-              <span className="ml-auto bg-white/80 backdrop-blur-sm px-3 py-1 rounded-xl text-[10px] font-black text-[#8B4C6A] shadow-sm">
+              <h2 className="font-black text-[#00B5B8] uppercase tracking-widest text-[10px]">{column.label}</h2>
+              <span className="ml-auto bg-white/80 backdrop-blur-sm px-3 py-1 rounded-xl text-[10px] font-black text-[#00B5B8] shadow-sm">
                 {orders.filter(o => o.status === column.id).length}
               </span>
             </div>
-            <div className="bg-[#8B4C6A]/5 p-4 rounded-b-[2rem] min-h-[500px] border-x border-b border-[#8B4C6A]/5">
+            <div className="bg-[#00B5B8]/5 p-4 rounded-b-[2rem] min-h-[500px] border-x border-b border-[#00B5B8]/5">
               {orders
                 .filter((order) => order.status === column.id)
                 .map((order) => (
@@ -250,8 +250,8 @@ const Dashboard = () => {
           {/* Modal Container */}
           <div className="relative bg-white/95 backdrop-blur-md p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(139,76,106,0.15)] w-full max-w-[500px] max-h-[90vh] overflow-y-auto border border-white/20 animate-fadeIn">
             <div className="flex items-center mb-8">
-              <div className="w-12 h-12 bg-[#8B4C6A]/10 rounded-2xl flex items-center justify-center mr-4">
-                <Plus className="w-6 h-6 text-[#8B4C6A]" />
+              <div className="w-12 h-12 bg-[#00B5B8]/10 rounded-2xl flex items-center justify-center mr-4">
+                <Plus className="w-6 h-6 text-[#00B5B8]" />
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Create New Order</h2>
@@ -264,20 +264,20 @@ const Dashboard = () => {
                 <label className="block text-sm font-bold text-gray-700 mb-2">Search Customer</label>
                 {!selectedCustomer ? (
                   <div className="relative group">
-                    <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-[#8B4C6A] transition-colors" />
+                    <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-[#00B5B8] transition-colors" />
                     <input
                       type="text"
-                      className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all"
+                      className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 focus:bg-white transition-all"
                       placeholder="Type name or phone..."
                       value={customerSearch}
                       onChange={(e) => setCustomerSearch(e.target.value)}
                     />
                     {customers.length > 0 && customerSearch.length >= 2 && (
-                      <div className="absolute z-10 w-full mt-2 bg-white border border-[#8B4C6A]/10 rounded-2xl shadow-xl max-h-52 overflow-y-auto overflow-hidden">
+                      <div className="absolute z-10 w-full mt-2 bg-white border border-[#00B5B8]/10 rounded-2xl shadow-xl max-h-52 overflow-y-auto overflow-hidden">
                         {customers.map(c => (
                           <div 
                             key={c.id} 
-                            className="p-4 hover:bg-[#8B4C6A]/5 cursor-pointer border-b border-gray-50 last:border-0 transition-colors"
+                            className="p-4 hover:bg-[#00B5B8]/5 cursor-pointer border-b border-gray-50 last:border-0 transition-colors"
                             onClick={() => {
                               setSelectedCustomer(c);
                               setCustomers([]);
@@ -292,20 +292,20 @@ const Dashboard = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="flex justify-between items-center p-4 bg-[#8B4C6A]/5 border border-[#8B4C6A]/10 rounded-2xl">
+                  <div className="flex justify-between items-center p-4 bg-[#00B5B8]/5 border border-[#00B5B8]/10 rounded-2xl">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#8B4C6A] font-bold mr-3 border border-[#8B4C6A]/10">
+                      <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#00B5B8] font-bold mr-3 border border-[#00B5B8]/10">
                         {selectedCustomer.full_name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-bold text-[#8B4C6A] text-sm">{selectedCustomer.full_name}</p>
-                        <p className="text-xs text-[#8B4C6A]/60 font-medium">{selectedCustomer.phone_number}</p>
+                        <p className="font-bold text-[#00B5B8] text-sm">{selectedCustomer.full_name}</p>
+                        <p className="text-xs text-[#00B5B8]/60 font-medium">{selectedCustomer.phone_number}</p>
                       </div>
                     </div>
                     <button 
                       type="button"
                       onClick={() => setSelectedCustomer(null)}
-                      className="text-xs font-bold text-[#8B4C6A] hover:underline bg-white px-3 py-1.5 rounded-lg border border-[#8B4C6A]/10"
+                      className="text-xs font-bold text-[#00B5B8] hover:underline bg-white px-3 py-1.5 rounded-lg border border-[#00B5B8]/10"
                     >
                       Change
                     </button>
@@ -319,7 +319,7 @@ const Dashboard = () => {
                   <input
                     type="number"
                     step="0.1"
-                    className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all font-semibold"
+                    className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 focus:bg-white transition-all font-semibold"
                     value={newOrder.weight_kg}
                     onChange={(e) => setNewOrder({ ...newOrder, weight_kg: e.target.value })}
                     required
@@ -336,12 +336,12 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="bg-[#8B4C6A]/5 rounded-2xl p-6 border border-[#8B4C6A]/10">
+              <div className="bg-[#00B5B8]/5 rounded-2xl p-6 border border-[#00B5B8]/10">
                 <div className="flex justify-between items-center mb-1">
                   <label className="text-sm font-bold text-gray-600">Total Amount</label>
-                  <span className="text-xs font-bold text-[#8B4C6A]/60 uppercase tracking-wider">Rate: ₱33.00/kg</span>
+                  <span className="text-xs font-bold text-[#00B5B8]/60 uppercase tracking-wider">Rate: ₱33.00/kg</span>
                 </div>
-                <div className="text-3xl font-black text-[#8B4C6A]">
+                <div className="text-3xl font-black text-[#00B5B8]">
                   ₱{newOrder.total_amount}
                 </div>
               </div>
@@ -359,7 +359,7 @@ const Dashboard = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-[#8B4C6A] text-white font-bold py-4 rounded-2xl hover:bg-[#8B4C6A]/90 transition-all shadow-lg shadow-[#8B4C6A]/20"
+                  className="flex-1 bg-[#00B5B8] text-white font-bold py-4 rounded-2xl hover:bg-[#00B5B8]/90 transition-all shadow-lg shadow-[#00B5B8]/20"
                 >
                   Create Order
                 </button>

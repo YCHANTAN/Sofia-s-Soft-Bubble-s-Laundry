@@ -34,7 +34,7 @@ const CustomerHistory = () => {
       case 'Pending': return 'bg-yellow-100 text-yellow-700';
       case 'Washing': return 'bg-blue-100 text-blue-700';
       case 'Drying': return 'bg-orange-100 text-orange-700';
-      case 'Completed': return 'bg-[#8B4C6A]/10 text-[#8B4C6A]';
+      case 'Completed': return 'bg-[#00B5B8]/10 text-[#00B5B8]';
       default: return 'bg-gray-100 text-gray-700';
     }
   };
@@ -47,14 +47,14 @@ const CustomerHistory = () => {
           <p className="text-gray-500">Track all your previous laundry services</p>
         </div>
         <div className="p-3 bg-white rounded-2xl shadow-sm border border-gray-100">
-          <History className="w-6 h-6 text-[#8B4C6A]" />
+          <History className="w-6 h-6 text-[#00B5B8]" />
         </div>
       </div>
 
       <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-50 flex items-center bg-gray-50/30">
-          <div className="flex items-center flex-1 bg-white border border-gray-100 rounded-2xl px-4 py-2 group focus-within:ring-2 focus-within:ring-[#8B4C6A]/20 transition-all">
-            <Search className="w-5 h-5 text-gray-400 mr-3 group-focus-within:text-[#8B4C6A]" />
+          <div className="flex items-center flex-1 bg-white border border-gray-100 rounded-2xl px-4 py-2 group focus-within:ring-2 focus-within:ring-[#00B5B8]/20 transition-all">
+            <Search className="w-5 h-5 text-gray-400 mr-3 group-focus-within:text-[#00B5B8]" />
             <input 
               type="text" 
               placeholder="Search by Order ID or service..." 
@@ -79,7 +79,7 @@ const CustomerHistory = () => {
           ) : (
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-[#8B4C6A]/5 text-[#8B4C6A] text-xs uppercase tracking-widest border-b border-[#8B4C6A]/10">
+                <tr className="bg-[#00B5B8]/5 text-[#00B5B8] text-xs uppercase tracking-widest border-b border-[#00B5B8]/10">
                   <th className="px-6 py-5 font-black">Date</th>
                   <th className="px-6 py-5 font-black">Order ID</th>
                   <th className="px-6 py-5 font-black">Service</th>
@@ -88,13 +88,13 @@ const CustomerHistory = () => {
                   <th className="px-6 py-5 font-black text-right">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#8B4C6A]/5 bg-white/50">
+              <tbody className="divide-y divide-[#00B5B8]/5 bg-white/50">
                 {filteredOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-[#8B4C6A]/5 transition-colors text-sm group">
+                  <tr key={order.id} className="hover:bg-[#00B5B8]/5 transition-colors text-sm group">
                     <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
                       {new Date(order.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 font-mono text-xs text-gray-400 group-hover:text-[#8B4C6A]/60 transition-colors">#{order.id}</td>
+                    <td className="px-6 py-4 font-mono text-xs text-gray-400 group-hover:text-[#00B5B8]/60 transition-colors">#{order.id}</td>
                     <td className="px-6 py-4 text-gray-600 font-medium">{order.service_type}</td>
                     <td className="px-6 py-4 text-gray-500 font-bold">{order.weight_kg}kg</td>
                     <td className="px-6 py-4">
@@ -102,7 +102,7 @@ const CustomerHistory = () => {
                         {order.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right font-black text-[#8B4C6A] whitespace-nowrap text-base">
+                    <td className="px-6 py-4 text-right font-black text-[#00B5B8] whitespace-nowrap text-base">
                       ₱{order.total_amount}
                     </td>
                   </tr>

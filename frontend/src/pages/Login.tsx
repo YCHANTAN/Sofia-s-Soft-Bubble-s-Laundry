@@ -52,10 +52,9 @@ const Login = () => {
         {/* Overlay Card */}
         <div className="absolute bottom-10 left-10 right-10">
           <div className="bg-white/80 backdrop-blur-md p-8 rounded-2xl max-w-md shadow-lg border border-white/20">
-            <h1 className="text-3xl font-bold text-[#8B4C6A] mb-3">Sofia's Soft Bubbles</h1>
+            <h1 className="text-3xl font-bold text-[#00B5B8] mb-3">Sofia's Soft Bubbles</h1>
             <p className="text-gray-700 leading-relaxed">
-              Experience premium garment care with a delicate touch. 
-              Join us in redefining the art of clean.
+              People trust hand-washed clothes because they know it's truly clean — just like how Tacloban trusts Sofia's Soft Bubbles for quality, affordable laundry care.
             </p>
           </div>
         </div>
@@ -85,7 +84,7 @@ const Login = () => {
                 }}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
                   role === r
-                    ? 'bg-white text-[#8B4C6A] shadow-sm'
+                    ? 'bg-white text-[#00B5B8] shadow-sm'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
@@ -113,7 +112,7 @@ const Login = () => {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8B4C6A]/20 focus:border-[#8B4C6A] bg-white transition-all outline-none text-gray-900 placeholder-gray-400"
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#00B5B8]/20 focus:border-[#00B5B8] bg-white transition-all outline-none text-gray-900 placeholder-gray-400"
                   placeholder="Enter your username"
                   required
                 />
@@ -134,7 +133,7 @@ const Login = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#8B4C6A]/20 focus:border-[#8B4C6A] bg-white transition-all outline-none text-gray-900 placeholder-gray-400"
+                  className="block w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#00B5B8]/20 focus:border-[#00B5B8] bg-white transition-all outline-none text-gray-900 placeholder-gray-400"
                   placeholder="••••••••"
                   required
                 />
@@ -158,7 +157,7 @@ const Login = () => {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-[#8B4C6A] focus:ring-[#8B4C6A] border-gray-300 rounded cursor-pointer"
+                className="h-4 w-4 text-[#00B5B8] focus:ring-[#00B5B8] border-gray-300 rounded cursor-pointer"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-600 cursor-pointer">
                 Keep me signed in
@@ -167,7 +166,7 @@ const Login = () => {
 
             <button
               type="submit"
-              className="w-full bg-[#8B4C6A] hover:bg-[#7A3D5B] text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-[#8B4C6A]/20 active:scale-[0.98]"
+              className="w-full bg-[#00B5B8] hover:bg-[#009699] text-white font-bold py-3.5 px-4 rounded-xl transition-all duration-200 shadow-lg shadow-[#00B5B8]/20 active:scale-[0.98]"
             >
               Sign In
             </button>

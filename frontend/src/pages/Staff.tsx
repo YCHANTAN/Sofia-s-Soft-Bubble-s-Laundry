@@ -96,7 +96,7 @@ const Staff = () => {
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="bg-[#8B4C6A]/10 hover:bg-[#8B4C6A]/20 text-[#8B4C6A] px-6 py-3 rounded-2xl flex items-center transition-all duration-200 border border-[#8B4C6A]/20 font-bold shadow-sm"
+          className="bg-[#00B5B8]/10 hover:bg-[#00B5B8]/20 text-[#00B5B8] px-6 py-3 rounded-2xl flex items-center transition-all duration-200 border border-[#00B5B8]/20 font-bold shadow-sm"
         >
           <UserPlus className="w-5 h-5 mr-2" />
           Add Staff Member
@@ -188,8 +188,8 @@ const Staff = () => {
           {/* Modal Container */}
           <div className="relative bg-white/95 backdrop-blur-md p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(139,76,106,0.15)] w-full max-w-[450px] max-h-[90vh] overflow-y-auto border border-white/20 animate-fadeIn">
             <div className="flex items-center mb-8">
-              <div className="w-12 h-12 bg-[#8B4C6A]/10 rounded-2xl flex items-center justify-center mr-4">
-                <ShieldCheck className="w-6 h-6 text-[#8B4C6A]" />
+              <div className="w-12 h-12 bg-[#00B5B8]/10 rounded-2xl flex items-center justify-center mr-4">
+                <ShieldCheck className="w-6 h-6 text-[#00B5B8]" />
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">Add Staff</h2>
@@ -204,7 +204,7 @@ const Staff = () => {
                 <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
                 <input
                   type="text"
-                  className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all font-medium"
+                  className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 focus:bg-white transition-all font-medium"
                   placeholder="e.g. Marie Dela Cruz"
                   value={newStaff.full_name}
                   onChange={(e) => setNewStaff({ ...newStaff, full_name: e.target.value })}
@@ -216,7 +216,7 @@ const Staff = () => {
                 <label className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
                 <input
                   type="text"
-                  className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all font-medium"
+                  className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 focus:bg-white transition-all font-medium"
                   placeholder="e.g. 09123456789"
                   value={newStaff.phone_number}
                   onChange={(e) => setNewStaff({ ...newStaff, phone_number: e.target.value })}
@@ -225,14 +225,14 @@ const Staff = () => {
               </div>
 
               <div className="bg-gray-50 rounded-[2rem] p-6 border border-gray-100 space-y-4">
-                <p className="text-xs font-bold text-[#8B4C6A] uppercase tracking-widest">Login Credentials</p>
+                <p className="text-xs font-bold text-[#00B5B8] uppercase tracking-widest">Login Credentials</p>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 mb-1.5 ml-1">Username</label>
                   <div className="relative group">
-                    <UserIcon className="absolute left-4 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#8B4C6A] transition-colors" />
+                    <UserIcon className="absolute left-4 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#00B5B8] transition-colors" />
                     <input
                       type="text"
-                      className="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all font-medium"
+                      className="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 transition-all font-medium"
                       placeholder="e.g. staff_marie"
                       value={newStaff.username}
                       onChange={(e) => setNewStaff({ ...newStaff, username: e.target.value })}
@@ -244,7 +244,7 @@ const Staff = () => {
                   <label className="block text-xs font-bold text-gray-500 mb-1.5 ml-1">Password</label>
                   <input
                     type="password"
-                    className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all font-medium"
+                    className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 transition-all font-medium"
                     value={newStaff.password}
                     onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
                     required
@@ -254,7 +254,7 @@ const Staff = () => {
                   <label className="block text-xs font-bold text-gray-500 mb-1.5 ml-1">Confirm Password</label>
                   <input
                     type="password"
-                    className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all font-medium"
+                    className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 transition-all font-medium"
                     value={newStaff.confirmPassword}
                     onChange={(e) => setNewStaff({ ...newStaff, confirmPassword: e.target.value })}
                     required
@@ -272,7 +272,7 @@ const Staff = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-[#8B4C6A] text-white font-bold py-4 rounded-2xl hover:bg-[#8B4C6A]/90 transition-all shadow-lg shadow-[#8B4C6A]/20"
+                  className="flex-1 bg-[#00B5B8] text-white font-bold py-4 rounded-2xl hover:bg-[#00B5B8]/90 transition-all shadow-lg shadow-[#00B5B8]/20"
                 >
                   Create Account
                 </button>

@@ -138,7 +138,7 @@ const Customers = () => {
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="bg-[#8B4C6A]/10 hover:bg-[#8B4C6A]/20 text-[#8B4C6A] px-6 py-3 rounded-2xl flex items-center transition-all duration-200 border border-[#8B4C6A]/20 font-bold shadow-sm"
+          className="bg-[#00B5B8]/10 hover:bg-[#00B5B8]/20 text-[#00B5B8] px-6 py-3 rounded-2xl flex items-center transition-all duration-200 border border-[#00B5B8]/20 font-bold shadow-sm"
         >
           <UserPlus className="w-5 h-5 mr-2" />
           Register Customer
@@ -280,7 +280,7 @@ const Customers = () => {
               ) : (
                 <table className="w-full text-left">
                   <thead className="bg-gray-50 sticky top-0 z-10">
-                    <tr className="text-[#8B4C6A] text-[10px] font-black uppercase tracking-widest border-b border-gray-100">
+                    <tr className="text-[#00B5B8] text-[10px] font-black uppercase tracking-widest border-b border-gray-100">
                       <th className="px-4 py-3">Date</th>
                       <th className="px-4 py-3">Service</th>
                       <th className="px-4 py-3">Weight</th>
@@ -322,8 +322,8 @@ const Customers = () => {
           />
           <div className="relative bg-white/95 backdrop-blur-md p-7 rounded-[2.5rem] shadow-[0_20px_50px_rgba(139,76,106,0.15)] w-full max-w-[420px] mb-12 border border-white/20 animate-fadeIn custom-scrollbar">
             <div className="flex items-center mb-6">
-              <div className="w-11 h-11 bg-[#8B4C6A]/10 rounded-2xl flex items-center justify-center mr-4">
-                <UserPlus className="w-5 h-5 text-[#8B4C6A]" />
+              <div className="w-11 h-11 bg-[#00B5B8]/10 rounded-2xl flex items-center justify-center mr-4">
+                <UserPlus className="w-5 h-5 text-[#00B5B8]" />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-gray-900">Register Customer</h2>
@@ -338,10 +338,10 @@ const Customers = () => {
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1.5 ml-1">Full Name</label>
                   <div className="relative group">
-                    <UserIcon className="absolute left-4 top-3 h-4 w-4 text-gray-400 group-focus-within:text-[#8B4C6A] transition-colors" />
+                    <UserIcon className="absolute left-4 top-3 h-4 w-4 text-gray-400 group-focus-within:text-[#00B5B8] transition-colors" />
                     <input
                       type="text"
-                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all text-sm font-medium"
+                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 focus:bg-white transition-all text-sm font-medium"
                       placeholder="Juan Dela Cruz"
                       value={newCustomer.full_name}
                       onChange={(e) => setNewCustomer({ ...newCustomer, full_name: e.target.value })}
@@ -353,10 +353,10 @@ const Customers = () => {
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
                   <div className="relative group">
-                    <Phone className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-[#8B4C6A] transition-colors" />
+                    <Phone className="absolute left-4 top-3.5 h-5 w-5 text-gray-400 group-focus-within:text-[#00B5B8] transition-colors" />
                     <input
                       type="text"
-                      className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all font-medium"
+                      className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 focus:bg-white transition-all font-medium"
                       placeholder="e.g. 09123456789"
                       value={newCustomer.phone_number}
                       onChange={(e) => setNewCustomer({ ...newCustomer, phone_number: e.target.value })}
@@ -367,11 +367,11 @@ const Customers = () => {
               </div>
               
               <div className="bg-gray-50/50 rounded-[1.5rem] p-5 border border-gray-100 space-y-3">
-                <p className="text-[10px] font-black text-[#8B4C6A] uppercase tracking-widest mb-1">Account Security</p>
+                <p className="text-[10px] font-black text-[#00B5B8] uppercase tracking-widest mb-1">Account Security</p>
                 <div>
                   <input
                     type="text"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all text-sm font-medium"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 transition-all text-sm font-medium"
                     placeholder="Username"
                     value={newCustomer.username}
                     onChange={(e) => setNewCustomer({ ...newCustomer, username: e.target.value })}
@@ -381,7 +381,7 @@ const Customers = () => {
                 <div className="grid grid-cols-2 gap-3">
                   <input
                     type="password"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all text-sm font-medium"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 transition-all text-sm font-medium"
                     placeholder="Password"
                     value={newCustomer.password}
                     onChange={(e) => setNewCustomer({ ...newCustomer, password: e.target.value })}
@@ -389,7 +389,7 @@ const Customers = () => {
                   />
                   <input
                     type="password"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all text-sm font-medium"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 transition-all text-sm font-medium"
                     placeholder="Confirm"
                     value={newCustomer.confirmPassword}
                     onChange={(e) => setNewCustomer({ ...newCustomer, confirmPassword: e.target.value })}
@@ -408,7 +408,7 @@ const Customers = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-[#8B4C6A] text-white font-bold py-3.5 rounded-xl hover:bg-[#8B4C6A]/90 transition-all shadow-lg shadow-[#8B4C6A]/20 text-sm"
+                  className="flex-1 bg-[#00B5B8] text-white font-bold py-3.5 rounded-xl hover:bg-[#00B5B8]/90 transition-all shadow-lg shadow-[#00B5B8]/20 text-sm"
                 >
                   Register
                 </button>
@@ -429,8 +429,8 @@ const Customers = () => {
           />
           <div className="relative bg-white/95 backdrop-blur-md p-7 rounded-[2.5rem] shadow-[0_20px_50px_rgba(139,76,106,0.15)] w-full max-w-[420px] max-h-[90vh] overflow-y-auto border border-white/20 animate-fadeIn custom-scrollbar">
             <div className="flex items-center mb-6">
-              <div className="w-11 h-11 bg-[#8B4C6A]/10 rounded-2xl flex items-center justify-center mr-4">
-                <Edit className="w-5 h-5 text-[#8B4C6A]" />
+              <div className="w-11 h-11 bg-[#00B5B8]/10 rounded-2xl flex items-center justify-center mr-4">
+                <Edit className="w-5 h-5 text-[#00B5B8]" />
               </div>
               <div>
                 <h2 className="text-xl font-bold text-gray-900">Edit Customer</h2>
@@ -444,10 +444,10 @@ const Customers = () => {
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1.5 ml-1">Full Name</label>
                 <div className="relative group">
-                  <UserIcon className="absolute left-4 top-3 h-4 w-4 text-gray-400 group-focus-within:text-[#8B4C6A] transition-colors" />
+                  <UserIcon className="absolute left-4 top-3 h-4 w-4 text-gray-400 group-focus-within:text-[#00B5B8] transition-colors" />
                   <input
                     type="text"
-                    className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all text-sm font-medium"
+                    className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 focus:bg-white transition-all text-sm font-medium"
                     value={editingCustomer.full_name}
                     onChange={(e) => setEditingCustomer({ ...editingCustomer, full_name: e.target.value })}
                     required
@@ -458,10 +458,10 @@ const Customers = () => {
               <div>
                 <label className="block text-xs font-bold text-gray-700 mb-1.5 ml-1">Phone Number</label>
                 <div className="relative group">
-                  <Phone className="absolute left-4 top-3 h-4 w-4 text-gray-400 group-focus-within:text-[#8B4C6A] transition-colors" />
+                  <Phone className="absolute left-4 top-3 h-4 w-4 text-gray-400 group-focus-within:text-[#00B5B8] transition-colors" />
                   <input
                     type="text"
-                    className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all text-sm font-medium"
+                    className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 focus:bg-white transition-all text-sm font-medium"
                     value={editingCustomer.phone_number}
                     onChange={(e) => setEditingCustomer({ ...editingCustomer, phone_number: e.target.value })}
                     required
@@ -470,11 +470,11 @@ const Customers = () => {
               </div>
 
               <div className="bg-gray-50/50 rounded-[1.5rem] p-5 border border-gray-100 space-y-3">
-                <p className="text-[10px] font-black text-[#8B4C6A] uppercase tracking-widest mb-1">Security Update</p>
+                <p className="text-[10px] font-black text-[#00B5B8] uppercase tracking-widest mb-1">Security Update</p>
                 <div>
                   <input
                     type="text"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all text-sm font-medium"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 transition-all text-sm font-medium"
                     placeholder="Username"
                     value={editingCustomer.username}
                     onChange={(e) => setEditingCustomer({ ...editingCustomer, username: e.target.value })}
@@ -484,7 +484,7 @@ const Customers = () => {
                 <div>
                   <input
                     type="password"
-                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all text-sm font-medium"
+                    className="w-full px-4 py-2.5 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00B5B8]/20 transition-all text-sm font-medium"
                     placeholder="New password (leave blank to keep)"
                     value={editingCustomer.password || ''}
                     onChange={(e) => setEditingCustomer({ ...editingCustomer, password: e.target.value })}
@@ -505,7 +505,7 @@ const Customers = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-[#8B4C6A] text-white font-bold py-3.5 rounded-xl hover:bg-[#8B4C6A]/90 transition-all shadow-lg shadow-[#8B4C6A]/20 text-sm"
+                  className="flex-1 bg-[#00B5B8] text-white font-bold py-3.5 rounded-xl hover:bg-[#00B5B8]/90 transition-all shadow-lg shadow-[#00B5B8]/20 text-sm"
                 >
                   Save Changes
                 </button>
