@@ -41,7 +41,7 @@ const Orders = () => {
       case 'Pending': return 'bg-yellow-100 text-yellow-700';
       case 'Washing': return 'bg-blue-100 text-blue-700';
       case 'Drying': return 'bg-orange-100 text-orange-700';
-      case 'Completed': return 'bg-[#8B4C6A]/10 text-[#8B4C6A]';
+      case 'Completed': return 'bg-[#00B5B8]/10 text-[#00B5B8]';
       default: return 'bg-gray-100 text-gray-700';
     }
   };
@@ -79,7 +79,7 @@ const Orders = () => {
         </div>
         <button 
           onClick={handleExport}
-          className="bg-[#8B4C6A]/10 hover:bg-[#8B4C6A]/20 text-[#8B4C6A] px-6 py-3 rounded-2xl flex items-center transition-all duration-200 border border-[#8B4C6A]/20 font-bold shadow-sm"
+          className="bg-[#00B5B8]/10 hover:bg-[#00B5B8]/20 text-[#00B5B8] px-6 py-3 rounded-2xl flex items-center transition-all duration-200 border border-[#00B5B8]/20 font-bold shadow-sm"
         >
           <Download className="w-5 h-5 mr-2" />
           Export CSV
@@ -88,8 +88,8 @@ const Orders = () => {
 
       <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
         <div className="p-6 border-b border-gray-50 flex flex-wrap items-center justify-between gap-4 bg-gray-50/30">
-          <div className="flex items-center flex-1 min-w-[300px] bg-white border border-gray-100 rounded-2xl px-4 py-2 group focus-within:ring-2 focus-within:ring-[#8B4C6A]/20 transition-all">
-            <Search className="w-5 h-5 text-gray-400 mr-3 group-focus-within:text-[#8B4C6A]" />
+          <div className="flex items-center flex-1 min-w-[300px] bg-white border border-gray-100 rounded-2xl px-4 py-2 group focus-within:ring-2 focus-within:ring-[#00B5B8]/20 transition-all">
+            <Search className="w-5 h-5 text-gray-400 mr-3 group-focus-within:text-[#00B5B8]" />
             <input 
               type="text" 
               placeholder="Search by ID, customer name, or service..." 
@@ -136,7 +136,7 @@ const Orders = () => {
           ) : (
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-[#8B4C6A]/5 text-[#8B4C6A] text-xs uppercase tracking-widest border-b border-[#8B4C6A]/10">
+                <tr className="bg-[#00B5B8]/5 text-[#00B5B8] text-xs uppercase tracking-widest border-b border-[#00B5B8]/10">
                   <th className="px-6 py-5 font-black">Date</th>
                   <th className="px-6 py-5 font-black">Order ID</th>
                   <th className="px-6 py-5 font-black">Customer</th>
@@ -146,16 +146,16 @@ const Orders = () => {
                   <th className="px-6 py-5 font-black text-right">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#8B4C6A]/5 bg-white/50">
+              <tbody className="divide-y divide-[#00B5B8]/5 bg-white/50">
                 {filteredOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-[#8B4C6A]/5 transition-colors text-sm group">
+                  <tr key={order.id} className="hover:bg-[#00B5B8]/5 transition-colors text-sm group">
                     <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
                       {new Date(order.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 font-mono text-xs text-gray-400 group-hover:text-[#8B4C6A]/60 transition-colors">#{order.id}</td>
+                    <td className="px-6 py-4 font-mono text-xs text-gray-400 group-hover:text-[#00B5B8]/60 transition-colors">#{order.id}</td>
                     <td className="px-6 py-4">
                       <div>
-                        <p className="font-bold text-gray-800 group-hover:text-[#8B4C6A] transition-colors">{order.full_name}</p>
+                        <p className="font-bold text-gray-800 group-hover:text-[#00B5B8] transition-colors">{order.full_name}</p>
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">{order.phone_number}</p>
                       </div>
                     </td>
@@ -166,16 +166,16 @@ const Orders = () => {
                         {order.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right font-black text-[#8B4C6A] whitespace-nowrap text-base">
+                    <td className="px-6 py-4 text-right font-medium text-gray-900 whitespace-nowrap text-base">
                       ₱{order.total_amount}
                     </td>
                   </tr>
                 ))}
               </tbody>
-              <tfoot className="bg-[#8B4C6A]/5 border-t border-[#8B4C6A]/10">
+              <tfoot className="bg-[#00B5B8]/5 border-t border-[#00B5B8]/10">
                 <tr>
-                  <td colSpan={6} className="px-6 py-6 text-right font-black text-[#8B4C6A]/60 text-xs uppercase tracking-widest">Total Selected Revenue:</td>
-                  <td className="px-6 py-6 text-right font-black text-[#8B4C6A] text-xl">
+                  <td colSpan={6} className="px-6 py-6 text-right font-black text-[#00B5B8]/60 text-xs uppercase tracking-widest">Total Selected Revenue:</td>
+                  <td className="px-6 py-6 text-right font-black text-[#00B5B8] text-xl">
                     ₱{filteredOrders.reduce((sum, order) => sum + Number(order.total_amount), 0).toLocaleString(undefined, {minimumFractionDigits: 2})}
                   </td>
                 </tr>
