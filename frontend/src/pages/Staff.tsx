@@ -178,8 +178,15 @@ const Staff = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white p-8 rounded-[2rem] shadow-2xl w-full max-w-[450px] max-h-[90vh] overflow-y-auto border border-[#8B4C6A]/10">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Light Glassmorphism Backdrop */}
+          <div 
+            className="absolute inset-0 bg-white/20 backdrop-blur-sm transition-opacity"
+            onClick={() => setShowModal(false)}
+          />
+
+          {/* Modal Container */}
+          <div className="relative bg-white/95 backdrop-blur-md p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(139,76,106,0.15)] w-full max-w-[450px] max-h-[90vh] overflow-y-auto border border-white/20 animate-fadeIn">
             <div className="flex items-center mb-8">
               <div className="w-12 h-12 bg-[#8B4C6A]/10 rounded-2xl flex items-center justify-center mr-4">
                 <ShieldCheck className="w-6 h-6 text-[#8B4C6A]" />
