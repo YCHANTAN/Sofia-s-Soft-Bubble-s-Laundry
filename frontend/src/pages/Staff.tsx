@@ -96,20 +96,20 @@ const Staff = () => {
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-700 transition-colors"
+          className="bg-[#8B4C6A]/10 hover:bg-[#8B4C6A]/20 text-[#8B4C6A] px-6 py-3 rounded-2xl flex items-center transition-all duration-200 border border-[#8B4C6A]/20 font-bold shadow-sm"
         >
           <UserPlus className="w-5 h-5 mr-2" />
           Add Staff Member
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-        <div className="p-4 border-b border-gray-100 flex items-center">
-          <Search className="w-5 h-5 text-gray-400 mr-2" />
+      <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 mb-6 overflow-hidden">
+        <div className="p-6 border-b border-gray-50 flex items-center bg-gray-50/30">
+          <Search className="w-5 h-5 text-gray-400 mr-3" />
           <input 
             type="text" 
             placeholder="Search staff by username or name..." 
-            className="flex-1 focus:outline-none"
+            className="flex-1 focus:outline-none bg-transparent font-medium text-gray-600"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -134,7 +134,7 @@ const Staff = () => {
                   <tr key={staff.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
-                        <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mr-3 font-bold text-lg">
+                        <div className="w-10 h-10 rounded-full bg-brand/10 text-brand flex items-center justify-center mr-3 font-bold text-lg">
                           {staff.full_name?.charAt(0).toUpperCase() || staff.username.charAt(0).toUpperCase()}
                         </div>
                         <div>
@@ -178,82 +178,94 @@ const Staff = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-xl shadow-xl w-[450px] max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold mb-6 flex items-center">
-              <ShieldCheck className="w-6 h-6 mr-2 text-blue-600" />
-              Add Staff Member
-            </h2>
-            {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm">{error}</div>}
-            <form onSubmit={handleCreateStaff}>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-8 rounded-[2rem] shadow-2xl w-full max-w-[450px] max-h-[90vh] overflow-y-auto border border-[#8B4C6A]/10">
+            <div className="flex items-center mb-8">
+              <div className="w-12 h-12 bg-[#8B4C6A]/10 rounded-2xl flex items-center justify-center mr-4">
+                <ShieldCheck className="w-6 h-6 text-[#8B4C6A]" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Add Staff</h2>
+                <p className="text-sm text-gray-500 font-medium">Create a new staff account</p>
+              </div>
+            </div>
+
+            {error && <div className="bg-red-50 text-red-600 p-4 rounded-xl mb-6 text-sm font-medium border border-red-100">{error}</div>}
+            
+            <form onSubmit={handleCreateStaff} className="space-y-5">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all font-medium"
                   placeholder="e.g. Marie Dela Cruz"
                   value={newStaff.full_name}
                   onChange={(e) => setNewStaff({ ...newStaff, full_name: e.target.value })}
                   required
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 focus:bg-white transition-all font-medium"
                   placeholder="e.g. 09123456789"
                   value={newStaff.phone_number}
                   onChange={(e) => setNewStaff({ ...newStaff, phone_number: e.target.value })}
                   required
                 />
               </div>
-              <div className="mb-4 border-t pt-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                <div className="relative">
-                  <UserIcon className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+
+              <div className="bg-gray-50 rounded-[2rem] p-6 border border-gray-100 space-y-4">
+                <p className="text-xs font-bold text-[#8B4C6A] uppercase tracking-widest">Login Credentials</p>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1.5 ml-1">Username</label>
+                  <div className="relative group">
+                    <UserIcon className="absolute left-4 top-3 h-5 w-5 text-gray-400 group-focus-within:text-[#8B4C6A] transition-colors" />
+                    <input
+                      type="text"
+                      className="w-full pl-12 pr-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all font-medium"
+                      placeholder="e.g. staff_marie"
+                      value={newStaff.username}
+                      onChange={(e) => setNewStaff({ ...newStaff, username: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1.5 ml-1">Password</label>
                   <input
-                    type="text"
-                    className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g. staff_marie"
-                    value={newStaff.username}
-                    onChange={(e) => setNewStaff({ ...newStaff, username: e.target.value })}
+                    type="password"
+                    className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all font-medium"
+                    value={newStaff.password}
+                    onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1.5 ml-1">Confirm Password</label>
+                  <input
+                    type="password"
+                    className="w-full px-4 py-3 bg-white border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B4C6A]/20 transition-all font-medium"
+                    value={newStaff.confirmPassword}
+                    onChange={(e) => setNewStaff({ ...newStaff, confirmPassword: e.target.value })}
                     required
                   />
                 </div>
               </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                <input
-                  type="password"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={newStaff.password}
-                  onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="mb-6">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
-                <input
-                  type="password"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={newStaff.confirmPassword}
-                  onChange={(e) => setNewStaff({ ...newStaff, confirmPassword: e.target.value })}
-                  required
-                />
-              </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-4 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 bg-gray-100 text-gray-700 font-bold py-2 rounded-lg hover:bg-gray-200"
+                  className="flex-1 bg-gray-50 text-gray-500 font-bold py-4 rounded-2xl hover:bg-gray-100 transition-colors border border-gray-100"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-700"
+                  className="flex-1 bg-[#8B4C6A] text-white font-bold py-4 rounded-2xl hover:bg-[#8B4C6A]/90 transition-all shadow-lg shadow-[#8B4C6A]/20"
                 >
                   Create Account
                 </button>

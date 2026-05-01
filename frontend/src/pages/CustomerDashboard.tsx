@@ -40,7 +40,7 @@ const CustomerDashboard = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'Pending': return <Clock className="w-5 h-5 text-yellow-500" />;
-      case 'Washing': return <Clock className="w-5 h-5 text-blue-500" />;
+      case 'Washing': return <Clock className="w-5 h-5 text-brand" />;
       case 'Drying': return <Clock className="w-5 h-5 text-purple-500" />;
       case 'Ready': return <CheckCircle className="w-5 h-5 text-green-500" />;
       case 'Completed': return <Package className="w-5 h-5 text-gray-500" />;
@@ -66,8 +66,8 @@ const CustomerDashboard = () => {
           orders.map((order) => (
             <div key={order.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
               <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mr-4">
-                  <ShoppingBag className="w-6 h-6 text-blue-600" />
+                <div className="w-12 h-12 bg-brand/10 rounded-full flex items-center justify-center mr-4">
+                  <ShoppingBag className="w-6 h-6 text-brand" />
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-800">{order.service_type}</h3>
@@ -93,7 +93,7 @@ const CustomerDashboard = () => {
                 </div>
                 <div className="text-right border-l pl-8">
                   <p className="text-sm text-gray-500 mb-1">Total Amount</p>
-                  <p className="font-bold text-lg text-blue-600">₱{order.total_amount}</p>
+                  <p className="font-bold text-lg text-brand">₱{order.total_amount}</p>
                 </div>
               </div>
             </div>

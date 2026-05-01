@@ -60,7 +60,7 @@ const Analytics = () => {
           title="Active Orders" 
           value={stats?.activeOrders || 0} 
           icon={Package} 
-          color="bg-blue-500" 
+          color="bg-brand" 
         />
         <StatCard 
           title="New Customers Today" 
@@ -73,7 +73,7 @@ const Analytics = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <h2 className="text-lg font-bold mb-4 flex items-center">
-            <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+            <TrendingUp className="w-5 h-5 mr-2 text-brand" />
             Recent Daily Revenue
           </h2>
           <div className="overflow-x-auto">
@@ -115,7 +115,7 @@ const Analytics = () => {
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-2">
                   <div 
-                    className="bg-blue-500 h-2 rounded-full" 
+                    className="bg-brand h-2 rounded-full" 
                     style={{ width: `${Math.min(100, (parseFloat(item.revenue) / 50000) * 100)}%` }}
                   ></div>
                 </div>
