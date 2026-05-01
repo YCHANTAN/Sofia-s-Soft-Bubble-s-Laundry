@@ -80,13 +80,61 @@ export const deleteStaff = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
+    // Start transaction to ensure atomic deletion
+    await pool.query('BEGIN');
+
+    // Unlink audit logs first to avoid foreign key violation
+    await pool.query('UPDATE audit_logs SET user_id = NULL WHERE user_id = $1', [id]);
+
     const result = await pool.query('DELETE FROM users WHERE id = $1 AND role = $2 RETURNING *', [id, 'staff']);
+    
+    if (result.rows.length === 0) {
+      await pool.query('ROLLBACK');
+      return res.status(404).json({ message: 'Staff member not found' });
+    }
+
+    await pool.query('COMMIT');
+    res.json({ message: 'Staff member deleted successfully' });
+  } catch (error: any) {
+    await pool.query('ROLLBACK');
+    res.status(500).json({ message: 'Error deleting staff member', error: error.message });
+  }
+};
+
+export const updateStaff = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { full_name, phone_number, username, password } = req.body;
+
+  try {
+    let updateFields = ['full_name = $1', 'phone_number = $2'];
+    let queryParams = [full_name, phone_number];
+    
+    if (username) {
+      queryParams.push(username);
+      updateFields.push(`username = $${queryParams.length}`);
+    }
+    
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      queryParams.push(hashedPassword);
+      updateFields.push(`password_hash = $${queryParams.length}`);
+    }
+    
+    queryParams.push(id);
+    const query = `UPDATE users SET ${updateFields.join(', ')} WHERE id = $${queryParams.length} AND role = 'staff' RETURNING id, username, full_name, phone_number`;
+    
+    const result = await pool.query(query, queryParams);
+    
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Staff member not found' });
     }
-    res.json({ message: 'Staff member deleted successfully' });
+    
+    res.json(result.rows[0]);
   } catch (error: any) {
-    res.status(500).json({ message: 'Error deleting staff member', error: error.message });
+    if (error.code === '23505') {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
+    res.status(500).json({ message: 'Error updating staff member', error: error.message });
   }
 };
 
