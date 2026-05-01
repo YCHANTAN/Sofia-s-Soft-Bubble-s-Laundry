@@ -2,10 +2,14 @@ import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { ShoppingBag, Clock, CheckCircle, Package } from 'lucide-react';
 import { Order } from '../types';
+import toast from 'react-hot-toast';
+import ConfirmModal from '../components/common/ConfirmModal';
 
 const CustomerDashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [orderToComplete, setOrderToToComplete] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchMyOrders = async () => {
@@ -24,19 +28,21 @@ const CustomerDashboard = () => {
     fetchMyOrders();
   }, []);
 
-  const handleCompleteOrder = async (orderId: number) => {
-    if (!window.confirm('Are you sure you have picked up your laundry? This will mark the order as Completed.')) return;
-    
+  const handleCompleteOrder = async () => {
+    if (!orderToComplete) return;
+
+    const loadingToast = toast.loading('Updating order status...');
     try {
-      await api.patch(`/orders/${orderId}/status`, { status: 'Completed' });
+      await api.patch(`/orders/${orderToComplete}/status`, { status: 'Completed' });
       // Update local state to remove the completed order from active view
-      setOrders(orders.filter(o => o.id !== orderId));
+      setOrders(orders.filter(o => o.id !== orderToComplete));
+      toast.success('Thank you! Your order has been marked as picked up.', { id: loadingToast });
     } catch (err) {
       console.error('Error completing order:', err);
-      alert('Failed to update order status. Please try again or contact staff.');
+      toast.error('Failed to update status. Please try again or contact staff.', { id: loadingToast });
     }
+    setOrderToToComplete(null);
   };
-
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'Pending': return <Clock className="w-5 h-5 text-yellow-500" />;
@@ -78,7 +84,10 @@ const CustomerDashboard = () => {
               <div className="flex items-center gap-8">
                 {order.status === 'Ready' && (
                   <button 
-                    onClick={() => handleCompleteOrder(order.id)}
+                    onClick={() => {
+                      setOrderToToComplete(order.id);
+                      setShowConfirmModal(true);
+                    }}
                     className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700 transition-colors shadow-sm"
                   >
                     Mark as Picked Up
@@ -100,6 +109,17 @@ const CustomerDashboard = () => {
           ))
         )}
       </div>
+
+      {/* Pickup Confirmation */}
+      <ConfirmModal 
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleCompleteOrder}
+        title="Confirm Laundry Pickup"
+        message="Are you sure you have picked up your laundry? This will complete the order and remove it from your active list."
+        confirmText="Yes, I've picked it up"
+        type="info"
+      />
     </div>
   );
 };

@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import { Search, UserPlus, Phone, User as UserIcon, Trash2, History, X, MoreVertical, Edit, ShoppingBag } from 'lucide-react';
 import { Customer, Order } from '../types';
+import toast from 'react-hot-toast';
+import ConfirmModal from '../components/common/ConfirmModal';
 
 const Customers = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -10,6 +12,8 @@ const Customers = () => {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showHistoryModal, setShowHistoryModal] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [customerToDelete, setCustomerToDelete] = useState<number | null>(null);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [editingCustomer, setEditingCustomer] = useState<{ id: number; full_name: string; phone_number: string; username: string; password?: string } | null>(null);
   const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
@@ -64,8 +68,10 @@ const Customers = () => {
       return;
     }
 
+    const loadingToast = toast.loading('Registering customer...');
     try {
       await api.post('/customers', newCustomer);
+      toast.success('Customer registered successfully!', { id: loadingToast });
       setShowModal(false);
       setNewCustomer({ 
         full_name: '', 
@@ -76,7 +82,9 @@ const Customers = () => {
       });
       fetchCustomers();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Error creating customer');
+      const msg = err.response?.data?.message || 'Error creating customer';
+      setError(msg);
+      toast.error(msg, { id: loadingToast });
       console.error('Error creating customer:', err);
     }
   };
@@ -86,32 +94,39 @@ const Customers = () => {
     if (!editingCustomer) return;
     setError('');
 
+    const loadingToast = toast.loading('Updating customer profile...');
     try {
       await api.put(`/customers/${editingCustomer.id}`, {
         full_name: editingCustomer.full_name,
         phone_number: editingCustomer.phone_number,
-        password: editingCustomer.password
+        password: editingCustomer.password,
+        username: editingCustomer.username
       });
+      toast.success('Profile updated!', { id: loadingToast });
       setShowEditModal(false);
       setEditingCustomer(null);
       fetchCustomers();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Error updating customer');
+      const msg = err.response?.data?.message || 'Error updating customer';
+      setError(msg);
+      toast.error(msg, { id: loadingToast });
       console.error('Error updating customer:', err);
     }
   };
 
-  const handleDeleteCustomer = async (id: number) => {
-    setOpenDropdownId(null);
-    if (!window.confirm('Are you sure you want to delete this customer? All associated orders and their login account will be removed.')) return;
+  const handleDeleteCustomer = async () => {
+    if (!customerToDelete) return;
     
+    const loadingToast = toast.loading('Deleting customer account...');
     try {
-      await api.delete(`/customers/${id}`);
+      await api.delete(`/customers/${customerToDelete}`);
+      toast.success('Customer account deleted.', { id: loadingToast });
       fetchCustomers();
     } catch (err) {
       console.error('Error deleting customer:', err);
-      alert('Failed to delete customer');
+      toast.error('Failed to delete customer account.', { id: loadingToast });
     }
+    setCustomerToDelete(null);
   };
 
   const handleViewHistory = async (customer: Customer) => {
@@ -124,6 +139,7 @@ const Customers = () => {
       setCustomerOrders(response.data);
     } catch (err) {
       console.error('Error fetching customer history:', err);
+      toast.error('Error fetching order history');
     } finally {
       setLoadingHistory(false);
     }
@@ -145,8 +161,8 @@ const Customers = () => {
         </button>
       </div>
 
-      <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 mb-6 overflow-hidden">
-        <div className="p-6 border-b border-gray-50 flex items-center bg-gray-50/30">
+      <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 mb-6">
+        <div className="p-6 border-b border-gray-50 flex items-center bg-gray-50/30 rounded-t-[2rem]">
           <Search className="w-5 h-5 text-gray-400 mr-3" />
           <input 
             type="text" 
@@ -157,7 +173,7 @@ const Customers = () => {
           />
         </div>
 
-        <div className="overflow-x-auto min-h-[300px]">
+        <div className="overflow-x-auto min-h-[300px] pb-20">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-gray-50 text-gray-600 text-sm uppercase">
@@ -227,7 +243,11 @@ const Customers = () => {
                             Edit Info
                           </button>
                           <button 
-                            onClick={() => handleDeleteCustomer(customer.id)}
+                            onClick={() => {
+                              setCustomerToDelete(customer.id);
+                              setShowDeleteConfirm(true);
+                              setOpenDropdownId(null);
+                            }}
                             className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-600/10 flex items-center transition-colors"
                           >
                             <Trash2 className="w-4 h-4 mr-2" />
@@ -514,6 +534,16 @@ const Customers = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation */}
+      <ConfirmModal 
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDeleteCustomer}
+        title="Delete Customer Account"
+        message="Are you sure you want to delete this customer? Their login account will be removed. Note: Their order transactions will be preserved in the records as 'Deleted Customer'."
+        confirmText="Delete Account"
+      />
     </div>
   );
 };

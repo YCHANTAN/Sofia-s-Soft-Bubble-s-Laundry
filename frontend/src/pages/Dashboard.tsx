@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { ShoppingBag, CheckCircle, Clock, Wind, RotateCcw, Plus, Search, LucideIcon, TrendingUp, Users } from 'lucide-react';
 import { Order, Customer, DashboardStats } from '../types';
+import toast from 'react-hot-toast';
 
 interface StatusColumn {
   id: Order['status'];
@@ -132,9 +133,11 @@ const Dashboard = () => {
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedCustomer) {
-      alert('Error: Please select an existing customer. Orders can only be created for registered customers.');
+      toast.error('Please select an existing customer.');
       return;
     }
+
+    const loadingToast = toast.loading('Creating order...');
     try {
       await api.post('/orders', {
         ...newOrder,
@@ -142,22 +145,27 @@ const Dashboard = () => {
         weight_kg: parseFloat(newOrder.weight_kg),
         total_amount: parseFloat(newOrder.total_amount)
       });
+      toast.success('Order created!', { id: loadingToast });
       setShowModal(false);
       setSelectedCustomer(null);
       setNewOrder({ weight_kg: '', service_type: 'Wash & Dry', total_amount: '0' });
       fetchOrders();
     } catch (err) {
+      toast.error('Failed to create order.', { id: loadingToast });
       console.error('Error creating order:', err);
     }
   };
 
   const handleUpdateStatus = async (orderId: number, newStatus: Order['status']) => {
+    const loadingToast = toast.loading(`Updating status to ${newStatus}...`);
     try {
       await api.patch(`/orders/${orderId}/status`, { status: newStatus });
       setOrders(orders.map(order => 
         order.id === orderId ? { ...order, status: newStatus } : order
       ));
+      toast.success(`Order #${orderId} is now ${newStatus}`, { id: loadingToast });
     } catch (err) {
+      toast.error('Failed to update status.', { id: loadingToast });
       console.error('Error updating order status:', err);
     }
   };

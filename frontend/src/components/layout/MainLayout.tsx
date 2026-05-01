@@ -106,7 +106,7 @@ const Sidebar = () => {
 
 const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="min-h-screen bg-[#FAFEFE] bg-gradient-to-br from-white via-[#F0FAFA]/30 to-[#F0FAFA]/50 relative overflow-hidden">
+    <div className="min-h-screen bg-[#FAFEFE] bg-gradient-to-br from-white via-[#F0FAFA]/30 to-[#F0FAFA]/50 relative overflow-x-hidden">
       {/* Decorative Gradients */}
       <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-[#00B5B8]/3 rounded-full blur-[120px] -mr-64 -mt-64 pointer-events-none" />
       <div className="fixed bottom-0 left-72 w-[500px] h-[500px] bg-[#00B5B8]/2 rounded-full blur-[100px] -ml-32 -mb-32 pointer-events-none" />
