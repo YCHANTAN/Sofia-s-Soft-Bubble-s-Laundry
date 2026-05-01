@@ -2,6 +2,17 @@ import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { TrendingUp, ShoppingBag, Users, LucideIcon } from 'lucide-react';
 import { DashboardStats, RevenueReport } from '../types';
+import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  AreaChart,
+  Area
+} from 'recharts';
 
 const StatCard = ({ title, value, icon: Icon, bgColor, iconColor }: { title: string; value: string | number; icon: LucideIcon; bgColor: string; iconColor: string }) => (
   <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
@@ -40,6 +51,11 @@ const Analytics = () => {
 
   if (loading) return <div className="text-center py-10">Loading analytics...</div>;
 
+  const chartData = reports?.daily.slice(0, 7).map(item => ({
+    name: new Date(item.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+    revenue: parseFloat(item.revenue)
+  })).reverse() || [];
+
   return (
     <div>
       <div className="mb-8">
@@ -77,27 +93,48 @@ const Analytics = () => {
             <TrendingUp className="w-5 h-5 mr-2 text-brand" />
             Recent Daily Revenue
           </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="text-gray-500 text-sm border-b border-gray-100">
-                  <th className="pb-3 font-medium">Date</th>
-                  <th className="pb-3 font-medium text-right">Revenue</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {reports?.daily.slice(0, 7).map((item) => (
-                  <tr key={item.date}>
-                    <td className="py-3 text-sm text-gray-700">
-                      {new Date(item.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
-                    </td>
-                    <td className="py-3 text-sm font-bold text-gray-900 text-right">
-                      ₱{parseFloat(item.revenue).toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#00B5B8" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="#00B5B8" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fontSize: 12, fill: '#6B7280' }}
+                  dy={10}
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fontSize: 12, fill: '#6B7280' }}
+                  tickFormatter={(value) => `₱${value}`}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    borderRadius: '8px', 
+                    border: 'none', 
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' 
+                  }}
+                  formatter={(value: any) => [`₱${Number(value).toLocaleString()}`, 'Revenue']}
+                />
+                <Area 
+                  name="Revenue"
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="#00B5B8" 
+                  strokeWidth={3}
+                  fillOpacity={1} 
+                  fill="url(#colorRev)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
