@@ -160,14 +160,16 @@ export const deleteCustomer = async (req: AuthRequest, res: Response) => {
     }
     const { user_id, full_name } = customerResult.rows[0];
 
-    // Delete orders first (cascade or manual)
-    await client.query('DELETE FROM orders WHERE customer_id = $1', [id]);
+    // Unlink orders instead of deleting them to preserve transaction history
+    await client.query('UPDATE orders SET customer_id = NULL WHERE customer_id = $1', [id]);
     
     // Delete customer
     await client.query('DELETE FROM customers WHERE id = $1', [id]);
     
     // Delete user account if it exists
     if (user_id) {
+      // Unlink audit logs before deleting the user to avoid foreign key violation
+      await client.query('UPDATE audit_logs SET user_id = NULL WHERE user_id = $1', [user_id]);
       await client.query('DELETE FROM users WHERE id = $1', [user_id]);
     }
 

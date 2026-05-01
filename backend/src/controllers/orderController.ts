@@ -25,9 +25,9 @@ export const createOrder = async (req: AuthRequest, res: Response) => {
 export const getOrders = async (req: Request, res: Response) => {
   try {
     const result = await pool.query(`
-      SELECT o.*, c.full_name, c.phone_number 
+      SELECT o.*, COALESCE(c.full_name, 'Deleted Customer') as full_name, COALESCE(c.phone_number, 'N/A') as phone_number 
       FROM orders o 
-      JOIN customers c ON o.customer_id = c.id 
+      LEFT JOIN customers c ON o.customer_id = c.id 
       ORDER BY o.updated_at DESC
     `);
     res.json(result.rows);
