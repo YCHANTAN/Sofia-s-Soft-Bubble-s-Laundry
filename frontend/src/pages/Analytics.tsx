@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { TrendingUp, DollarSign, Users, Package, LucideIcon } from 'lucide-react';
+import { TrendingUp, ShoppingBag, Users, LucideIcon } from 'lucide-react';
 import { DashboardStats, RevenueReport } from '../types';
 
-const StatCard = ({ title, value, icon: Icon, color }: { title: string; value: string | number; icon: LucideIcon; color: string }) => (
-  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-    <div className="flex items-center">
-      <div className={`p-3 rounded-lg ${color} mr-4`}>
-        <Icon className="w-6 h-6 text-white" />
-      </div>
-      <div>
-        <p className="text-sm text-gray-500 font-medium">{title}</p>
-        <h3 className="text-2xl font-bold text-gray-800">{value}</h3>
-      </div>
+const StatCard = ({ title, value, icon: Icon, bgColor, iconColor }: { title: string; value: string | number; icon: LucideIcon; bgColor: string; iconColor: string }) => (
+  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
+    <div className={`w-12 h-12 ${bgColor} rounded-lg flex items-center justify-center mr-4`}>
+      <Icon className={`w-6 h-6 ${iconColor}`} />
+    </div>
+    <div>
+      <p className="text-sm text-gray-500 font-medium">{title}</p>
+      <h3 className="text-2xl font-bold text-gray-800">{value}</h3>
     </div>
   </div>
 );
@@ -53,20 +51,23 @@ const Analytics = () => {
         <StatCard 
           title="Today's Revenue" 
           value={`₱${stats?.todayRevenue?.toLocaleString()}`} 
-          icon={DollarSign} 
-          color="bg-green-500" 
+          icon={TrendingUp} 
+          bgColor="bg-brand/10"
+          iconColor="text-brand" 
         />
         <StatCard 
           title="Active Orders" 
           value={stats?.activeOrders || 0} 
-          icon={Package} 
-          color="bg-brand" 
+          icon={ShoppingBag} 
+          bgColor="bg-orange-50"
+          iconColor="text-orange-600" 
         />
         <StatCard 
           title="New Customers Today" 
           value={stats?.newCustomersToday || 0} 
           icon={Users} 
-          color="bg-purple-500" 
+          bgColor="bg-green-50"
+          iconColor="text-green-600" 
         />
       </div>
 

@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
 import laundryLogo from '../assets/Laundry-Logo.svg';
+import loginDesign from '../assets/Login-Design.jpg';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -42,8 +43,8 @@ const Login = () => {
       {/* Left Side - Hero Image */}
       <div className="hidden md:flex md:w-1/2 relative overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1545173168-9f1947eebb9f?auto=format&fit=crop&q=80&w=2000"
-          alt="LuxeLinen Hero"
+          src={loginDesign}
+          alt="Sofia's Soft Bubbles Hero"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/10" />
@@ -120,16 +121,10 @@ const Login = () => {
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center mb-2">
                 <label className="block text-sm font-semibold text-gray-700">
                   Password
                 </label>
-                <button
-                  type="button"
-                  className="text-sm font-semibold text-[#8B4C6A] hover:underline"
-                >
-                  Forgot password?
-                </button>
               </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
