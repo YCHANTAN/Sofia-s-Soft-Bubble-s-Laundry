@@ -112,7 +112,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
       <div className="fixed bottom-0 left-72 w-[400px] h-[400px] bg-[#8B4C6A]/3 rounded-full blur-[100px] -ml-32 -mb-32 pointer-events-none" />
       
       <Sidebar />
-      <div className="pl-72 relative z-10">
+      <div className="pl-72 relative">
         <main className="p-10 max-w-7xl mx-auto min-h-screen">
           <div className="animate-fadeIn">
             {children}
