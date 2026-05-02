@@ -20,22 +20,6 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reports', reportRoutes);
 
-// Temporary Setup Route (Delete after use)
-app.get('/api/setup-admin', async (req, res) => {
-  try {
-    const bcrypt = require('bcryptjs');
-    const hashedPassword = await bcrypt.hash('admin123', 10);
-    await pool.query('DELETE FROM users WHERE username = $1', ['admin']);
-    await pool.query(
-      'INSERT INTO users (username, password_hash, role, full_name) VALUES ($1, $2, $3, $4)',
-      ['admin', hashedPassword, 'admin', 'Owner']
-    );
-    res.send('Admin account created successfully! Username: admin, Password: admin123');
-  } catch (error: any) {
-    res.status(500).send('Error creating admin: ' + error.message);
-  }
-});
-
 app.get(['/', '/api'], (req, res) => {
   res.send('Sofia\'s Soft Bubble\'s Laundry Shop API is running...');
 });
