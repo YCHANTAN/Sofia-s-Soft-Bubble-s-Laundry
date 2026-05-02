@@ -20,7 +20,7 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reports', reportRoutes);
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('Sofia\'s Soft Bubble\'s Laundry Shop API is running...');
 });
 
@@ -33,6 +33,10 @@ pool.query('SELECT NOW()', (err, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+export default app;
