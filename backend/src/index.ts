@@ -20,7 +20,7 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reports', reportRoutes);
 
-app.get('/api', (req, res) => {
+app.get(['/', '/api'], (req, res) => {
   res.send('Sofia\'s Soft Bubble\'s Laundry Shop API is running...');
 });
 
